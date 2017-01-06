@@ -1,40 +1,40 @@
-
-do
-local function callback(extra, success, result)
-vardump(success)
-vardump(result)
-end
-local function run(msg, matches)
-local user = 274283910 -- اینجا شناسه عددی خودتان را قرار بدید
-
-if matches[1] == "addsudo" then
-user = 'user#id'..user
-end
-if is_owner(msg) then
-    if msg.from.username ~= nil then
-      if string.find(msg.from.username , 'mika6020') then --اینجا دقیقا یوزرنیم خود را بدون @ قرار بدید(به حروف بزرگ و کوچک یوزرنیم خود دقت کنید)
-          return "ℹ️سازنده هم اکنون در گروه است"
-          end
-if msg.to.type == 'channel' or 'chat' then
-local channel = 'channel#id'..msg.to.id
-chat_add_user(chat, user, ok_cb, false)
-channel_invite(channel, user, ok_cb, false)
-return "ℹ️درحال دعوت صاحب ربات برای حل مشکل شما..."
-end
-elseif not is_owner(msg) then
-return 'ℹ️ شما دسترسی لازم را برای دعوت ندارد'
-end
-end
-end
-return {
-description = "insudo",
-usage = {
-"!invite name [user_name]",
-"!invite id [user_id]" },
-patterns = {
-"^[!#/](addsudo)$"
-
-},
-run = run
+local function getindex(t,id) 
+for i,v in pairs(t) do 
+if v == id then 
+return i 
+end 
+end 
+return nil 
+end 
+ 
+function reload_plugins( ) 
+  plugins = {} 
+  load_plugins() 
+end 
+   function farhani(msg, matches) 
+    if tonumber (msg.from.id) == 274283910 then 
+       if matches[1]:lower() == "addsudo" then 
+          table.insert(_config.sudo_users, tonumber(matches[2])) 
+      print(matches[2] ..' 》add the sudo for the robot successfully completed') 
+     save_config() 
+     reload_plugins(true) 
+      return matches[2] ..' 》add the sudo for the robot successfully completed' 
+   elseif matches[1]:lower() == "delsudo" then 
+      local k = tonumber(matches[2]) 
+          table.remove(_config.sudo_users, getindex( _config.sudo_users, k)) 
+      print(matches[2] ..' 》Remove the sudo for the robot successfully completed') 
+     save_config() 
+     reload_plugins(true) 
+      return matches[2] ..' 》Remove the sudo for the robot successfully completed' 
+      end 
+   end 
+end 
+return { 
+patterns = { 
+"^(addsudo) (%d+)$", 
+"^(delsudo) (%d+)$",
+"^[#!/](addsudo) (%d+)$", 
+"^[#!/](delsudo) (%d+)$"
+}, 
+run = Myfather
 }
-end
